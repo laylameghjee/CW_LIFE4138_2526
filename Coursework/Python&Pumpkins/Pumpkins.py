@@ -20,11 +20,13 @@ pumpkins = pd.read_csv('pumpkins_01.csv')
 heaviest = pumpkins.sort_values('weight_lbs', ascending=False)
 print('Below is the heaviest pumpkin')
 # prints only selected columns from the data set
+#using 0 as python starts from 0 not 1
 print(heaviest.iloc[[0]][['id','weight_lbs', 'city', 'country', 'variety']])
 
 
 ##      TASK THREE
 # converting pounds to kilos
+#function to convert the weights
 def convert(weight_lbs):
 	return weight_lbs * 0.453592
 
@@ -50,7 +52,9 @@ pumpkins['weight_class'] = pumpkins['weight_lbs'].apply(classw)
 ##      TASK FIVE
 #plot estimated v actual weight and coloured by class
 category = pumpkins['weight_class']
+#assigning each colour to the particular weight class
 colour_options = {'light': 'green', 'medium': 'orange', 'heavy': 'red'}
+#assigning the colours to the ones previously chosen
 colors = category.map(colour_options)
 plt.scatter(pumpkins['est_weight'], pumpkins['weight_lbs'], c=colors, edgecolor='black')
 plt.xlabel('estimated weight(lbs)')
@@ -73,8 +77,9 @@ pumpkins_filt = pd.read_csv('pumpkins_filtered.csv')
 country_mean = pumpkins_filt.groupby('country')['weight_lbs'].mean().to_string() 
 print(country_mean)
 #summarise mean weights by variety
-variety_mean = pumpkins_filt.groupby('variety')['weight_lbs'].mean().to_string() 
+variety_mean = pumpkins_filt.groupby(['country','variety'])['weight_lbs'].mean().to_string() 
 print(variety_mean)
+
 
 
 ##      TASK EIGHT
@@ -92,9 +97,12 @@ sns.set_theme(style='darkgrid')
 fplot = sns.catplot(x='variety', y='weight_lbs', col='country', data=pumpkins_filt, kind=
 'box', hue = 'variety', palette = 'pastel', col_wrap=3)
 fplot.set_axis_labels('Variety', 'Weight(lbs)')
-fplot.set_titles('{col_name}') #pulls the names from the dataset
-for ax in fplot.axes.flatten(): #plays with the aes of the axis
-    ax.tick_params(axis="x", rotation=90) #rotates x axis labels 
+#pulls the names from the dataset
+fplot.set_titles('{col_name}') 
+#plays with the aesthetics of the axis
+for ax in fplot.axes.flatten(): 
+#rotates x axis labels 
+    ax.tick_params(axis="x", rotation=90) 
 plt.tight_layout()
 plt.show()
 
